@@ -1,7 +1,6 @@
-const jpegJs = require('jpeg-js');
-const { PNG } = require('pngjs');
-
-const decode = require('heic-decode');
+import jpegJs from 'jpeg-js';
+import { PNG } from 'pngjs';
+import decode from 'heic-decode';
 
 const to = {
   JPEG: ({ data, width, height, quality }) => jpegJs.encode({ data, width, height }, quality).data,
@@ -30,7 +29,7 @@ const convertImage = async ({ image, format, quality }) => {
   });
 };
 
-const convert = async ({ buffer, format, quality, all }) => {
+const convertImpl = async ({ buffer, format, quality, all }) => {
   if (!to[format]) {
     throw new Error(`output format needs to be one of [${Object.keys(to)}]`);
   }
@@ -53,5 +52,5 @@ const convert = async ({ buffer, format, quality, all }) => {
   });
 };
 
-module.exports = async ({ buffer, format, quality = 0.92 }) => await convert({ buffer, format, quality, all: false });
-module.exports.all = async ({ buffer, format, quality = 0.92 }) => await convert({ buffer, format, quality, all: true });
+export const heicConvert = async ({ buffer, format, quality = 0.92 }) => await convertImpl({ buffer, format, quality, all: false });
+heicConvert.all = async ({ buffer, format, quality = 0.92 }) => await convertImpl({ buffer, format, quality, all: true });
